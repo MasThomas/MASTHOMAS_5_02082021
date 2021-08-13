@@ -1,41 +1,71 @@
+// Construtor 
+
+class Product {
+    constructor({lenses,_id,name,price,description,imageUrl,quantity,}) {
+        this.lenses = lenses;
+        this.id = _id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+    }
+}
+
 // Récupération ID dans l'URL
 
-let params = new URLSearchParams(document.location.search.substring(1));
-let id = params.get("id");
-console.log(id); // OK
+const params = new URLSearchParams(document.location.search);
+const urlId = params.get("id");
+// console.log(urlId); // Ok le bon ID est récupéré
 
+
+// Nouveau fetch pour récupérer les données
+
+fetch("http://localhost:3000/api/cameras/" + urlId)
+    .then(res => res.json())
+//    .then(data => console.log(data)) / OK
+    .then(function(addProduct) {
+        let item = new Product(addProduct)
+        showProduct(item);
+    })
 // Suite à la récupération de l'ID, construction de la page produit dynamique
+// Construction card 
 
-// Const pour afficher les produits dans l'HTML 
-/*
-const addProduct = item => {
-    container = document.getElementById("container")
-    .innerHTML +=   `<div class="col mb-3 mx-3 my-5 w-25">
-                        <div class="card h-100">
-                            <img class="card-img-top img-cover" src=${item.imageUrl} alt="..." />
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <h5 class="fw-bolder">${item.name}</h5>
-                                    <span>${item.price/100} €</span>
-                                </div>
-                            </div>
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-primary" href="./product.html?id=${item.id}">Voir la fiche produit</a></div>
-                            </div>
+const showProduct = item => {
+    document.getElementById("container-product").innerHTML =   
+                    `<div class="card" style="width: 400px;">
+                        <img src="${item.imageUrl}" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">${item.name}</h5>
+                            <p class="card-text fst-italic text-center">${item.description}</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item mx-auto">Selectionnez la lentille</li>
+                            <li class="list-group-item" id="lenses_choice"></li>
+                            <li class="list-group-item text-center">Prix unitaire : ${item.price/100} €</li>
+                            <li class="list-group-item text-center">Selectionnez la quantité :
+                               <input type="number" id="qty_selector" min="0" max="99">
+                            </li>
+                        </ul>
+                        <div class="card-body mx-auto">
+                            <div class="btn btn-primary"><i class="fas fa-shopping-cart"></i>&emsp;Ajouter au panier&emsp;</div>
                         </div>
                     </div>`                                                    
 };
 
-// REQUETE API
 
-fetch("http://localhost:3000/api/cameras")
-    .then(res => res.json())
+
+
+
+
+
+
+
+/*
     .then(function (ProductsList) {
         for (let product of ProductsList) {
             let item = new Product(product)
             addProduct(item);  
         }
     })
-    // console.error("Erreur de connexion à la base de donnée. Merci de réactualiser la page !")
-
     */
