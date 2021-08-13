@@ -12,24 +12,7 @@ class Product {
     }
 }
 
-// Récupération ID dans l'URL
-
-const params = new URLSearchParams(document.location.search);
-const urlId = params.get("id");
-// console.log(urlId); // Ok le bon ID est récupéré
-
-
-// Nouveau fetch pour récupérer les données
-
-fetch("http://localhost:3000/api/cameras/" + urlId)
-    .then(res => res.json())
-//    .then(data => console.log(data)) / OK
-    .then(function(addProduct) {
-        let item = new Product(addProduct)
-        showProduct(item);
-    })
-// Suite à la récupération de l'ID, construction de la page produit dynamique
-// Construction card 
+// Création de l'élément HTML à injecter 
 
 const showProduct = item => {
     document.getElementById("container-product").innerHTML =   
@@ -41,10 +24,14 @@ const showProduct = item => {
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item mx-auto">Selectionnez la lentille</li>
-                            <li class="list-group-item" id="lenses_choice"></li>
+                            <li class="list-group-item mx-auto">
+                                <select id="lenses_choice">
+                                    <option value ="">-- Selectionnez une lentille --</option>
+                                </select>
+                            </li>
                             <li class="list-group-item text-center">Prix unitaire : ${item.price/100} €</li>
                             <li class="list-group-item text-center">Selectionnez la quantité :
-                               <input type="number" id="qty_selector" min="0" max="99">
+                               <input type="number" id="qty_selector" min="1" max="99" value="1">
                             </li>
                         </ul>
                         <div class="card-body mx-auto">
@@ -53,19 +40,25 @@ const showProduct = item => {
                     </div>`                                                    
 };
 
+// Récupération ID dans l'URL
+
+const params = new URLSearchParams(document.location.search);
+const urlId = params.get("id");
+// console.log(urlId); // Ok le bon ID est récupéré
 
 
+// Nouveau fetch pour récupérer les données
 
-
-
-
-
-
-/*
-    .then(function (ProductsList) {
-        for (let product of ProductsList) {
-            let item = new Product(product)
-            addProduct(item);  
-        }
+fetch("http://localhost:3000/api/cameras/" + urlId)
+    .then(res => res.json())
+    .then(function(addProduct) {
+        let item = new Product(addProduct)
+        showProduct(item);
     })
-    */
+fetch("http://localhost:3000/api/cameras/" + urlId)
+    .then(res => res.json())  
+    .then(data => function(addLenses) {
+    for (let i = 0; i <= data.lenses.length; i++) {
+        document.getElementById("lenses_choice").innerHTML += `<option>${data.lenses[i]}</option>`;
+    }
+    })
