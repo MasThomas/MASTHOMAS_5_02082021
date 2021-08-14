@@ -46,19 +46,18 @@ const params = new URLSearchParams(document.location.search);
 const urlId = params.get("id");
 // console.log(urlId); // Ok le bon ID est récupéré
 
-
-// Nouveau fetch pour récupérer les données
+// Nouveau fetch pour récupérer les données et afficher le produit selectionné
 
 fetch("http://localhost:3000/api/cameras/" + urlId)
     .then(res => res.json())
     .then(function(addProduct) {
         let item = new Product(addProduct)
         showProduct(item);
+
+// Récupération de la liste des lentilles et affichage dans un menu déroulant (<select>)
+    for (let lenses of item.lenses) {
+            document.getElementById("lenses_choice").innerHTML += `<option value="${lenses}">${lenses}</option>`;
+        };
     })
-fetch("http://localhost:3000/api/cameras/" + urlId)
-    .then(res => res.json())  
-    .then(data => function(addLenses) {
-    for (let i = 0; i <= data.lenses.length; i++) {
-        document.getElementById("lenses_choice").innerHTML += `<option>${data.lenses[i]}</option>`;
-    }
-    })
+
+console.log(localStorage)
