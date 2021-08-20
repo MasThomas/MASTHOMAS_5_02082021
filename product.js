@@ -15,8 +15,8 @@ class Product {
 // Création de l'élément HTML à injecter 
 
 const showProduct = item => {
-    document.getElementById("container-product").innerHTML =   
-                    `<div class="card" style="width: 400px;">
+    document.getElementById("container-product")
+        .innerHTML =   `<div class="card" style="width: 400px;">
                         <img src="${item.imageUrl}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title text-center">${item.name}</h5>
@@ -37,8 +37,22 @@ const showProduct = item => {
                         <div class="card-body mx-auto">
                             <button class="btn btn-primary" id="buttonAdd"><i class="fas fa-shopping-cart"></i>&emsp;Ajouter au panier&emsp;</button>
                         </div>
-                    </div>`                                                    
-};
+                    </div>` 
+                    
+    function getVal() {
+        const val = document.getElementById('quantitySelector').value;
+        return val;
+    }
+
+    document.getElementById('buttonAdd').addEventListener('click', function () {
+        localStorage.setItem(urlId, getVal())
+    });
+}
+                        
+
+                    
+
+                    
 
 // Récupération ID dans l'URL
 
@@ -62,12 +76,12 @@ fetch("http://localhost:3000/api/cameras/" + urlId)
 
 // Récupération input
 
-function getVal() {
+/* function getVal() {
     const val = document.getElementById('quantitySelector').value;
     console.log(val);
     return val;
 }
-
+ 
 document.getElementById("buttonAdd").addEventListener("click", function () {
     localStorage.setItem(urlId, getVal()) 
-});
+}); */
