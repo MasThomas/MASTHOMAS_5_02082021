@@ -31,11 +31,11 @@ const showProduct = item => {
                             </li>
                             <li class="list-group-item text-center">Prix unitaire : ${item.price/100} €</li>
                             <li class="list-group-item text-center">Selectionnez la quantité :
-                               <input type="number" id="qty_selector" min="1" max="99" value="1">
+                               <input type="number" id="quantitySelector" min="1" max="99" value="1">
                             </li>
                         </ul>
                         <div class="card-body mx-auto">
-                            <div class="btn btn-primary"><i class="fas fa-shopping-cart"></i>&emsp;Ajouter au panier&emsp;</div>
+                            <button class="btn btn-primary" id="buttonAdd"><i class="fas fa-shopping-cart"></i>&emsp;Ajouter au panier&emsp;</button>
                         </div>
                     </div>`                                                    
 };
@@ -60,4 +60,14 @@ fetch("http://localhost:3000/api/cameras/" + urlId)
         };
     })
 
-console.log(localStorage)
+// Récupération input
+
+function getVal() {
+    const val = document.getElementById('quantitySelector').value;
+    console.log(val);
+    return val;
+}
+
+document.getElementById("buttonAdd").addEventListener("click", function () {
+    localStorage.setItem(urlId, getVal()) 
+});
