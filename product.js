@@ -12,7 +12,27 @@ class Product {
     }
 }
 
-// Création de l'élément HTML à injecter 
+// Récupération ID dans l'URL
+
+const params = new URLSearchParams(document.location.search);
+const urlId = params.get("id");
+// console.log(urlId); // Ok le bon ID est récupéré
+
+// Nouveau fetch pour récupérer les données et afficher le produit selectionné
+
+fetch("http://localhost:3000/api/cameras/" + urlId)
+    .then(res => res.json())
+    .then(function(addProduct) {
+        let item = new Product(addProduct)
+        showProduct(item);
+
+// Récupération de la liste des lentilles et affichage dans un menu déroulant (<select>)
+    for (let lenses of item.lenses) {
+            document.getElementById("lenses_choice").innerHTML += `<option value="${lenses}">${lenses}</option>`;
+        };
+    })
+
+// Création de l'élément HTML à injecter, et paramètrage de l'EventListner pour l'ajout au Panier 
 
 const showProduct = item => {
     document.getElementById("container-product")
@@ -47,41 +67,4 @@ const showProduct = item => {
     document.getElementById('buttonAdd').addEventListener('click', function () {
         localStorage.setItem(urlId, getVal())
     });
-}
-                        
-
-                    
-
-                    
-
-// Récupération ID dans l'URL
-
-const params = new URLSearchParams(document.location.search);
-const urlId = params.get("id");
-// console.log(urlId); // Ok le bon ID est récupéré
-
-// Nouveau fetch pour récupérer les données et afficher le produit selectionné
-
-fetch("http://localhost:3000/api/cameras/" + urlId)
-    .then(res => res.json())
-    .then(function(addProduct) {
-        let item = new Product(addProduct)
-        showProduct(item);
-
-// Récupération de la liste des lentilles et affichage dans un menu déroulant (<select>)
-    for (let lenses of item.lenses) {
-            document.getElementById("lenses_choice").innerHTML += `<option value="${lenses}">${lenses}</option>`;
-        };
-    })
-
-// Récupération input
-
-/* function getVal() {
-    const val = document.getElementById('quantitySelector').value;
-    console.log(val);
-    return val;
-}
- 
-document.getElementById("buttonAdd").addEventListener("click", function () {
-    localStorage.setItem(urlId, getVal()) 
-}); */
+}                    
