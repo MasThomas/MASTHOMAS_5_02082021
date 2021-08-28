@@ -28,20 +28,6 @@ fetch("http://localhost:3000/api/cameras")
             addProduct(item);  
         }
     })
+
+    // Catch :
     // console.error("Erreur de connexion à la base de donnée. Merci de réactualiser la page !")
-
-    
-// Construtor 
-
-class Product {
-    constructor({lenses,_id,name,price,description,imageUrl,quantity,}) {
-        this.lenses = lenses;
-        this.id = _id;
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.quantity = quantity;
-    }
-}
-
