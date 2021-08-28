@@ -1,16 +1,4 @@
-// Construtor 
 
-class Product {
-    constructor({lenses,_id,name,price,description,imageUrl,quantity,}) {
-        this.lenses = lenses;
-        this.id = _id;
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.quantity = quantity;
-    }
-}
 
 // Récupération ID dans l'URL
 
@@ -59,12 +47,27 @@ const showProduct = item => {
                         </div>
                     </div>` 
                     
-    function getVal() {
-        const val = document.getElementById('quantitySelector').value;
-        return val;
-    }
 
-    document.getElementById('buttonAdd').addEventListener('click', function () {
-        localStorage.setItem(urlId, getVal())
-    });
-}                    
+    var addToCartBtn = document.getElementById('buttonAdd')
+    addToCartBtn.addEventListener('click', addToCart);
+
+    var quantityInput = document.getElementById('quantitySelector')
+    quantityInput.addEventListener('change', quantityChanged)
+
+    var getVal = 0;
+
+
+// Récupération de l'input Quantité pour l'ajout au panier, et empècher une valeur négative ou NaN
+
+    function quantityChanged(e) {
+        var input = e.target
+        if (isNaN(input.value) || input.value <= 0) {
+            input.value = 1
+        }
+        return getVal = input.value
+    }
+}
+
+function addToCart(){
+    console.log('ok')
+}
