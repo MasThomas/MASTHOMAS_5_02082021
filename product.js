@@ -1,5 +1,3 @@
-
-
 // Récupération ID dans l'URL
 
 const params = new URLSearchParams(document.location.search);
@@ -10,8 +8,8 @@ const urlId = params.get("id");
 
 fetch("http://localhost:3000/api/cameras/" + urlId)
     .then(res => res.json())
-    .then(function(addProduct) {
-        let item = new Product(addProduct)
+    .then(function(displayProduct) {
+        let item = new Product(displayProduct)
         showProduct(item);
 
 // Récupération de la liste des lentilles et affichage dans un menu déroulant (<select>)
@@ -20,54 +18,120 @@ fetch("http://localhost:3000/api/cameras/" + urlId)
         };
     })
 
-// Création de l'élément HTML à injecter, et paramètrage de l'EventListner pour l'ajout au Panier 
+// Création de l'élément HTML à injecter suite à l'appel API 
 
-const showProduct = item => {
-    document.getElementById("container-product")
-        .innerHTML =   `<div class="card" style="width: 400px;">
-                        <img src="${item.imageUrl}" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">${item.name}</h5>
-                            <p class="card-text fst-italic text-center">${item.description}</p>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item mx-auto">Selectionnez la lentille</li>
-                            <li class="list-group-item mx-auto">
-                                <select id="lenses_choice">
-                                    <option value ="">-- Selectionnez une lentille --</option>
-                                </select>
-                            </li>
-                            <li class="list-group-item text-center">Prix unitaire : ${item.price/100} €</li>
-                            <li class="list-group-item text-center">Selectionnez la quantité :
-                               <input type="number" id="quantitySelector" min="1" max="99" value="1">
-                            </li>
-                        </ul>
-                        <div class="card-body mx-auto">
-                            <button class="btn btn-primary" id="buttonAdd"><i class="fas fa-shopping-cart"></i>&emsp;Ajouter au panier&emsp;</button>
-                        </div>
-                    </div>` 
-                    
+const showProduct = (item) => {
+    document.getElementById("container-product").innerHTML =   
+        `<div class="card" style="width: 400px;">
+            <img src="${item.imageUrl}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title text-center">${item.name}</h5>
+                <p class="card-text fst-italic text-center">${item.description}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item mx-auto">Selectionnez l'objectif</li>
+                <li class="list-group-item mx-auto">
+                    <select id="lenses_choice">
+                        <option value ="Aucun objectif">Aucun objectif</option>
+                    </select>
+                </li>
+                <li class="list-group-item text-center">Prix unitaire : ${item.price/100} €</li>
+                <li class="list-group-item text-center">Selectionnez la quantité :
+                    <input type="number" id="quantitySelector" min="1" max="99" value="1">
+                </li>
+            </ul>
+            <div class="card-body mx-auto">
+                <button class="btn btn-primary" id="buttonAdd"><i class="fas fa-shopping-cart"></i>&emsp;Ajouter au panier&emsp;</button>
+            </div>
+        </div>`                 
+    
 
-    var addToCartBtn = document.getElementById('buttonAdd')
-    addToCartBtn.addEventListener('click', addToCart);
+// Selection de l'input quantité et ajout d'un EventListener (change)
 
-    var quantityInput = document.getElementById('quantitySelector')
+    let quantityInput = document.getElementById('quantitySelector')
     quantityInput.addEventListener('change', quantityChanged)
 
-    var getVal = 0;
+// Initialisation de getVal en cas de non-modification de l'input puis récupération de l'input Quantité
+// pour l'ajout au panier, en empèchant une valeur négative ou NaN
 
+    let getVal = 1  ;
 
-// Récupération de l'input Quantité pour l'ajout au panier, et empècher une valeur négative ou NaN
-
-    function quantityChanged(e) {
-        var input = e.target
+    function quantityChanged(event) {
+        var input = event.target
         if (isNaN(input.value) || input.value <= 0) {
             input.value = 1
         }
-        return getVal = input.value
+        getVal = input.value
+        console.log(getVal)
+        return getVal;
     }
-}
+    
+// Selection du select Lenses et ajout d'un EventListener (change)
 
-function addToCart(){
-    console.log('ok')
+    let lensesInput = document.getElementById('lenses_choice')
+    lensesInput.addEventListener('change', lensesChoice)
+
+// Initialisation de getLenses en cas de non-modification puis récupération du choix de lentilles 
+
+    let getLenses = lensesInput.value;
+
+    function lensesChoice(event) {
+        var input = event.target
+        getLenses = input.value
+        console.log(getLenses)
+        return getLenses;
+    }
+
+
+// Selection du bouton "Ajouter au Panier", initialisation de la variable array "cart", puis ajout d'un EventListener (click)
+
+    var addToCartBtn = document.getElementById('buttonAdd')
+    let cart = [];
+
+    addToCartBtn.addEventListener('click', function(event) {
+        event.preventDefault()
+    
+// Création de la variable product contenant un objet qui reprend les caractéristiques de l'objet à ajouter au panier 
+
+        let product = {
+            _id: item._id,
+            image: item.imageUrl,
+            name: item.name,
+            price: item.price,
+            quantity: parseInt(getVal),
+            lenses: getLenses,
+        };
+
+// Initialisation d'une variable de validation 
+
+        let testProduct = true;
+
+// Vérification si le panier est existant ou s'il faut le créer
+// Puis ajout de product au tableau cart
+// Stringify du tableau afin de le rendre compatible avec le localStorage
+// Alerte afin de valider la prise en compte de sa demande à l'utilisateur
+
+        if (localStorage.getItem("cartStorage") === null) {
+            cart.push(product); 
+            localStorage.setItem("cartStorage", JSON.stringify(cart));
+            alert(`Vous avez ajouté ${product.quantity} "${product.name}" avec l'objectif "${product.lenses}" à votre panier`);
+            console.log(localStorage)
+        }    
+        
+// Si le panier est existant
+// On parcourt le tableau afin de vérifier 
+        else {
+            cart = JSON.parse(localStorage.getItem("cartStorage"));
+            for (let item of cart) {
+                if (item._id === product._id && item.lenses === product.lenses) {
+                    item.quantity += product.quantity;
+                    testProduct = false;
+                }
+            }
+                if (testProduct) cart.push(product);
+                    localStorage.setItem("cartStorage", JSON.stringify(cart));
+                    alert(`Vous avez ajouté ${product.quantity} "${product.name}" avec l'objectif "${product.lenses}" à votre panier`);
+                    console.log(localStorage);
+        }
+    });
 }
