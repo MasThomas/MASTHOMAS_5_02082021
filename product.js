@@ -21,30 +21,35 @@ fetch("http://localhost:3000/api/cameras/" + urlId)
 // Création de l'élément HTML à injecter suite à l'appel API 
 
 const showProduct = (item) => {
-    document.getElementById("container-product").innerHTML =   
-        `<div class="card" style="width: 400px;">
-            <img src="${item.imageUrl}" class="card-img-top">
-            <div class="card-body">
-                <h5 class="card-title text-center">${item.name}</h5>
-                <p class="card-text fst-italic text-center">${item.description}</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item mx-auto">Selectionnez l'objectif</li>
-                <li class="list-group-item mx-auto">
-                    <select id="lenses_choice">
-                        <option value ="Aucun objectif">Aucun objectif</option>
-                    </select>
-                </li>
-                <li class="list-group-item text-center">Prix unitaire : ${item.price/100} €</li>
-                <li class="list-group-item text-center">Selectionnez la quantité :
-                    <input type="number" id="quantitySelector" min="1" max="99" value="1">
-                </li>
-            </ul>
-            <div class="card-body mx-auto">
-                <button class="btn btn-primary" id="buttonAdd"><i class="fas fa-shopping-cart"></i>&emsp;Ajouter au panier&emsp;</button>
-            </div>
-        </div>`                 
+    document.getElementById("container-product").innerHTML =
+        `<div class="d-flex justify-content-center my-5" style="height: 300px">
+        <div class="card d-flex flex-row mx-auto w-75">
+        <img src="${item.imageUrl}" class="img-product img-thumbnail">
+          <div class="card-body w-25 my-auto">
+              <h5 class="card-title text-center">${item.name}</h5>
+              <p class="card-text fst-italic text-center">${item.description}</p>
+          </div>
+          <ul class="list-group list-group-flush my-auto">
+              <li class="list-group-item mx-auto">Selectionnez l'objectif :</li>
+              <li class="list-group-item mx-auto">
+                  <select id="lenses_choice">
+                      <option value="Aucun objectif">Aucun objectif</option>
+                  <option value="35mm 1.4">35mm 1.4</option><option value="50mm 1.6">50mm 1.6</option></select>
+              </li>
+              <li class="list-group-item text-center">Prix unitaire : ${item.price/100} €</li>
+              <li class="list-group-item text-center">Selectionnez la quantité :
+                  <input type="number" id="quantitySelector" min="1" max="99" value="1">
+              </li>
+          </ul>
+          <div class="card-body d-flex flex-column justify-content-evenly w-25">
+              <button class="btn btn-primary" id="buttonAdd"><i class="fas fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier </button>
+              <a href="./index.html" class="btn btn-primary"><i class="fa fa-angle-left"></i> Retourner aux articles</a>
+              <a href="./cart.html" class="btn btn-primary" id="goToCart">Aller au panier <i class="fa fa-angle-right"></i></a>
+          </div>
+      </div>
+    </div>`                 
     
+
 
 // Selection de l'input quantité et ajout d'un EventListener (change)
 
@@ -97,9 +102,11 @@ const showProduct = (item) => {
             _id: item._id,
             image: item.imageUrl,
             name: item.name,
+            description: item.description,
             price: item.price,
             quantity: parseInt(getVal),
             lenses: getLenses,
+            subtotal: parseInt(item.price * getVal),
         };
 
 // Initialisation d'une variable de validation 
@@ -116,6 +123,7 @@ const showProduct = (item) => {
             localStorage.setItem("cartStorage", JSON.stringify(cart));
             alert(`Vous avez ajouté ${product.quantity} "${product.name}" avec l'objectif "${product.lenses}" à votre panier`);
             console.log(localStorage)
+            location.reload();
         }    
         
 // Si le panier est existant
@@ -132,6 +140,7 @@ const showProduct = (item) => {
                     localStorage.setItem("cartStorage", JSON.stringify(cart));
                     alert(`Vous avez ajouté ${product.quantity} "${product.name}" avec l'objectif "${product.lenses}" à votre panier`);
                     console.log(localStorage);
+                    location.reload();
         }
     });
 }
