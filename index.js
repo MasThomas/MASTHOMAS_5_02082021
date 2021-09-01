@@ -4,7 +4,7 @@ const addProduct = item => {
     container = document.getElementById("container")
     .innerHTML +=   `<div class="col mb-3 mx-3 my-5 w-25">
                         <div class="card h-100">
-                            <img class="card-img-top img-cover" src=${item.imageUrl} alt="..." />
+                            <img class="card-img-top img-cover" src=${item.imageUrl} alt="photo de l'appareil ${item.name}" />
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <h5 class="fw-bolder">${item.name}</h5>
