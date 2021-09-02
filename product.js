@@ -99,7 +99,7 @@ const showProduct = (item) => {
 // Création de la variable product contenant un objet qui reprend les caractéristiques de l'objet à ajouter au panier 
 
         let product = {
-            _id: item._id,
+            _id: urlId,
             image: item.imageUrl,
             name: item.name,
             description: item.description,
