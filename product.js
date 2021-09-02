@@ -6,7 +6,7 @@ const urlId = params.get("id");
 
 // Nouveau fetch pour récupérer les données et afficher le produit selectionné
 
-fetch("http://localhost:3000/api/cameras/" + urlId)
+fetch("https://apiorinico.herokuapp.com//api/cameras/" + urlId)
     .then(res => res.json())
     .then(function(displayProduct) {
         let item = new Product(displayProduct)

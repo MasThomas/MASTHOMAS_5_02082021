@@ -20,7 +20,7 @@ const addProduct = item => {
 
 // REQUETE API
 
-fetch("http://localhost:3000/api/cameras")
+fetch("https://apiorinico.herokuapp.com/api/cameras")
     .then(res => res.json())
     .then(function (ProductsList) {
         for (let product of ProductsList) {

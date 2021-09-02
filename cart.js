@@ -130,7 +130,7 @@ function submitVerificatons() {
             console.log(stringifySentInformations)
 
             // Envoyer l'objet en POST
-            fetch("http://localhost:3000/api/cameras/order", {
+            fetch("https://apiorinico.herokuapp.com/api/cameras", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -213,7 +213,7 @@ function inputCityVerif(cityInput) {
 
 
 
-fetch("http://localhost:3000/api/cameras/")
+fetch("https://apiorinico.herokuapp.com/api/cameras")
     .then(res => res.json)
     .then(doesFormAndTableAndDeleteButtonAppear())
     .then(checkEmptyCart())
