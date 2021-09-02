@@ -1,4 +1,4 @@
-var cart = JSON.parse(localStorage.getItem("cartStorage"))
+var cartToCalculate = JSON.parse(localStorage.getItem("cartStorage"))
 
 
 var totalItemsInCart = 0;
@@ -8,16 +8,16 @@ function calculateHowManyItemsInCart(){
         return totalItemsInCart = 0;
     }
     else {
-        for(let i = 0; i < cart.length; ++i) {
-        let j = Object.values(cart[i])        
-        totalItemsInCart += (j[4]);
+        for(let i = 0; i < cartToCalculate.length; ++i) {
+        let j = Object.values(cartToCalculate[i])        
+        totalItemsInCart += (j[5]);
         }
         return totalItemsInCart;
     }
 }
 
 calculateHowManyItemsInCart();
-console.log(totalItemsInCart)
+// console.log(totalItemsInCart)
 
 var itemsInCartSpan = document.getElementById("itemsInCart")
 
