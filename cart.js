@@ -130,7 +130,7 @@ function submitVerificatons() {
             console.log(stringifySentInformations)
 
             // Envoyer l'objet en POST
-            fetch("https://apiorinico.herokuapp.com/api/cameras", {
+            fetch("https://apiorinico.herokuapp.com/api/cameras/order", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -142,12 +142,12 @@ function submitVerificatons() {
 
             .then(response => response.json()) 
             .then(response => { localStorage.setItem("orderId",JSON.stringify(response.orderId))})
-            localStorage.setItem("totalPrice", totalPrice)
-            console.log(localStorage)
+            .then(localStorage.setItem("totalPrice", totalPrice))
+            .then(console.log(localStorage))
                             
             // Passer à la page suivante
 
-            // window.location.href= "./confirmation.html"
+            .then(window.location.href= "./confirmation.html");
 
 
     } else {
