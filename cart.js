@@ -129,26 +129,46 @@ function submitVerificatons() {
             let stringifySentInformations = JSON.stringify({contact, products});
             console.log(stringifySentInformations)
 
-            // Envoyer l'objet en POST
+            async function sendPostInformations(){
+                const response = await fetch("https://apiorinico.herokuapp.com/api/cameras/order", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    mode: 'cors',
+                    body: stringifySentInformations
+                })
+                let body = await response.json();
+                console.log(response.status);
+                console.log(response.statusText);
+                
+                if (response.status === 200 || response.status === 201) {
+                    localStorage.setItem("orderId",JSON.stringify(body.orderId))
+                    localStorage.setItem("totalPrice", totalPrice)
+                    window.location.href = "./confirmation.html";
+                }
+            }
+
+            sendPostInformations();
+            /* // Envoyer l'objet en POST
             fetch("https://apiorinico.herokuapp.com/api/cameras/order", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: stringifySentInformations
-            })
+            }) */
 
             // Traiter la réponse, et stocker l'orderId retourné dans le localStorage
 
-            .then(response => response.json()) 
-            .then(response => { localStorage.setItem("orderId",JSON.stringify(response.orderId))})
-            .then(localStorage.setItem("totalPrice", totalPrice))
-            .then(console.log(localStorage))
+            // .then(response => response.json()) 
+            // fetchSendOrder().then(jsonResponse => {localStorage.setItem("orderId",JSON.stringify(jsonResponse.orderId))})
+            //localStorage.setItem("totalPrice", totalPrice)
+            console.log(localStorage)
                             
             // Passer à la page suivante
-
-            .then(window.location.href= "./confirmation.html");
-
+           // window.location.href="./confirmation.html";
+            //setTimeout(moveToConfirmationPage, 500)
 
     } else {
         alert('Veuillez vérifier la validité des informations saisies')
@@ -219,3 +239,8 @@ fetch("https://apiorinico.herokuapp.com/api/cameras")
     .then(checkEmptyCart())
     .then(calculateTotalPrice())
     .then(displayTotalPrice())
+
+
+function moveToConfirmationPage() {
+    window.location.href="./confirmation.html";
+    }
