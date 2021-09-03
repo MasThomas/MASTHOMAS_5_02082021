@@ -5,6 +5,8 @@ let containerMessage = document.getElementById("container-alert-message")
 
 let cart = JSON.parse(localStorage.getItem("cartStorage"))
 
+// Si le panier est vide (=== null), Affichage d'un message invitant à retourner à la liste des articles
+
 function checkEmptyCart() {
     if (localStorage.getItem("cartStorage") === null) {
         containerMessage.innerHTML =
@@ -18,6 +20,9 @@ function checkEmptyCart() {
             </div>
             `
     } else {
+
+// Sinon, on créé une boucle sur le panier dans le localStorage pour afficher chaque élément de celui-ci
+
         for (item of cart) {
             containerCart.innerHTML +=
                 `<tbody>
@@ -42,7 +47,7 @@ function checkEmptyCart() {
 }
 
 
-// Si le panier est vide, supression du formulaire, du bouton pour vider le panier ainsi que d'un bout du tableau
+// Si le panier est vide, supression du formulaire, du bouton pour vider le panier ainsi que du footer du tableau du panier
 
 let formDiv = document.querySelector("#form-container")
 let tableFooter = document.querySelector("#table_footer")
@@ -56,6 +61,8 @@ function doesFormAndTableAndDeleteButtonAppear() {
     }
 }
 
+// Création d'un Eventlistener sur un bouton pour pouvoir vider le panier
+
 buttonDeleteCart.addEventListener('click', function(){
     localStorage.clear();
     location.reload();
@@ -63,6 +70,8 @@ buttonDeleteCart.addEventListener('click', function(){
 })
 
 let totalPrice = 0;
+
+// Création d'une fonction pour calculer le prix total du panier, puis pour l'afficher en innerHTML.
 
 function calculateTotalPrice(){
     for(let i = 0; i < cart.length; ++i) {
@@ -77,7 +86,7 @@ function displayTotalPrice() {
 }
 
 
-// Validation du formulaire
+// Ciblage des input afin de valider le formulaire
 
 let submitBtn = document.getElementById("submitForm")
 let firstNameInput = document.getElementById("inputFirstName")
@@ -86,6 +95,8 @@ let emailInput = document.getElementById("inputEmail")
 let adressInput = document.getElementById("inputAddress")
 let cityInput = document.getElementById("inputCity")
 
+
+// Création d'une boucle pour récupérer les Id du panier
 
 let products = []
 
@@ -99,7 +110,11 @@ function getCartIds() {
 }
 
 
+// EventListner au clic de validation du bouton
+
 submitBtn.addEventListener('click', submitVerificatons)
+
+// Suite au clic, fonction de vérification via regex
 
 function submitVerificatons() {
     inputFirstNameVerif()
@@ -113,7 +128,7 @@ function submitVerificatons() {
     inputCityVerif()
     console.log(inputCityVerif())
 
-    // Création de l'objet à envoyer
+    // Création de l'objet contact à envoyer
 
     let contact = {
         firstName: firstNameInput.value,
@@ -123,13 +138,18 @@ function submitVerificatons() {
         email: emailInput.value
     }
 
+    // Si toutes les vérifications retournent "true" (les regex sont validées), alors :
+
     if (inputFirstNameVerif() === true && inputLastNameVerif() === true && inputEmailVerif() === true && inputAdressVerif() === true && inputCityVerif() === true) {
             
+        // On récupère les Id du panier
             getCartIds()
+        // Puis on stocke les informations à transmettre à l'API sous forme de string dans une variable
+        
             let stringifySentInformations = JSON.stringify({contact, products});
             console.log(stringifySentInformations)
 
-            async function sendPostInformations(){
+            async function sendPostInformations() {
                 const response = await fetch("https://apiorinico.herokuapp.com/api/cameras/order", {
                     method: 'POST',
                     headers: {
@@ -142,6 +162,9 @@ function submitVerificatons() {
                 console.log(response.status);
                 console.log(response.statusText);
                 
+                // Si le serveur répond favorablement à la requète, on stocke l'ID de commande dans le localStorage ainsi que le coût total
+                // de la commande. Puis on redirige vers la page de confirmation de commande
+
                 if (response.status === 200 || response.status === 201) {
                     localStorage.setItem("orderId",JSON.stringify(body.orderId))
                     localStorage.setItem("totalPrice", totalPrice)
@@ -150,34 +173,17 @@ function submitVerificatons() {
             }
 
             sendPostInformations();
-            /* // Envoyer l'objet en POST
-            fetch("https://apiorinico.herokuapp.com/api/cameras/order", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: stringifySentInformations
-            }) */
 
-            // Traiter la réponse, et stocker l'orderId retourné dans le localStorage
+        // En revanche, si les informations saisies ne sont pas validées par les regex, on alerte l'utilisateur du problème
 
-            // .then(response => response.json()) 
-            // fetchSendOrder().then(jsonResponse => {localStorage.setItem("orderId",JSON.stringify(jsonResponse.orderId))})
-            //localStorage.setItem("totalPrice", totalPrice)
-            console.log(localStorage)
-                            
-            // Passer à la page suivante
-           // window.location.href="./confirmation.html";
-            //setTimeout(moveToConfirmationPage, 500)
-
-    } else {
+        } else {
         alert('Veuillez vérifier la validité des informations saisies')
         console.log("Mauvaise saisie")
     }
 }
  
 
-// Regex Nom, Prénom et Ville permettant les accents, les apostrophes, les tirets.
+// Regex Nom, Prénom et Ville permettant les accents, les apostrophes, les tirets ainsi que les lettres étrangères.
 
 function inputFirstNameVerif(inputFirstName) {
     let regex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
@@ -199,6 +205,16 @@ function inputLastNameVerif(lastNameInput) {
     }
 }
 
+function inputCityVerif(cityInput) {
+    let regex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
+    let ctrl = document.getElementById("inputCity")
+    if (regex.test(ctrl.value) === true) {
+        return true
+    } else {
+        return false
+    }   
+}
+
 // Regex email conforme à la norme RFC 5322
 
 function inputEmailVerif(emailInput) {
@@ -211,6 +227,8 @@ function inputEmailVerif(emailInput) {
     }
 }
 
+// Regex adresse, assez permissif mais obligeant 2 espaces.
+
 function inputAdressVerif(adressInput) {
     let regex = /\w+(\s\w+){2,}/;
     let ctrl = document.getElementById("inputAddress")
@@ -220,18 +238,8 @@ function inputAdressVerif(adressInput) {
         return false
     }
 }
-function inputCityVerif(cityInput) {
-    let regex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
-    let ctrl = document.getElementById("inputCity")
-    if (regex.test(ctrl.value) === true) {
-        return true
-    } else {
-        return false
-    }   
-}
 
-
-
+// Fetch afin de récupérer les informations de l'API, puis de verifier le panier, puis de calculer et afficher le prix total
 
 fetch("https://apiorinico.herokuapp.com/api/cameras")
     .then(res => res.json)
@@ -239,8 +247,3 @@ fetch("https://apiorinico.herokuapp.com/api/cameras")
     .then(checkEmptyCart())
     .then(calculateTotalPrice())
     .then(displayTotalPrice())
-
-
-function moveToConfirmationPage() {
-    window.location.href="./confirmation.html";
-    }
