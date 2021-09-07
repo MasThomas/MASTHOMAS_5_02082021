@@ -1,8 +1,24 @@
+// REQUETE API
+
+fetch("https://apiorinico.herokuapp.com/api/cameras") // http://localhost:3000/api/cameras || https://apiorinico.herokuapp.com/api/cameras
+    .then(res => res.json())
+    .then(function (ProductsList) {
+        for (let product of ProductsList) {
+            let item = new Product(product)
+            addProduct(item);  
+        }
+    })
+    .catch(function(error) {
+        console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
+        alert('Un problème est survenu avec le serveur, veuillez réactualiser la page.')
+      });
+      
+      
 // Const pour afficher les produits dans l'HTML
 
 const addProduct = item => {
     container = document.getElementById("container")
-    .innerHTML +=   `<div class="col mb-3 mx-3 my-5 w-25">
+    .innerHTML +=   `<div class="mx-auto my-4"> 
                         <div class="card h-100">
                             <img class="card-img-top img-cover" src=${item.imageUrl} alt="photo de l'appareil ${item.name}" />
                             <div class="card-body p-4">
@@ -17,17 +33,3 @@ const addProduct = item => {
                         </div>
                     </div>`                                                    
 };
-
-// REQUETE API
-
-fetch("https://apiorinico.herokuapp.com/api/cameras")
-    .then(res => res.json())
-    .then(function (ProductsList) {
-        for (let product of ProductsList) {
-            let item = new Product(product)
-            addProduct(item);  
-        }
-    })
-
-    // Catch :
-    // console.error("Erreur de connexion à la base de donnée. Merci de réactualiser la page !")
