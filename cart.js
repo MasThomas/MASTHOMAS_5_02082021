@@ -29,7 +29,7 @@ function checkEmptyCart() {
                     <tr>
                     <td data-th="Product">
                         <div class="row">
-                        <div class="col-sm-2 hidden-xs"><img src="${item.image}" alt="Thumbnail de l'appareil ${item.name}" class="img-thumbnail "/></div>
+                        <div class="col-sm-2 hidden-xs my-auto"><img src="${item.image}" alt="Thumbnail de l'appareil ${item.name}" class="img-thumbnail img-cart"/></div>
                         <div class="col-sm-10">
                             <h4 class="nomargin">${item.name}</h4>
                             <p>${item.description}</p>
@@ -61,7 +61,7 @@ function doesFormAndTableAndDeleteButtonAppear() {
     }
 }
 
-// Création d'un Eventlistener sur un bouton pour pouvoir vider le panier
+// Création d'un Eventlistener sur le bouton pour pouvoir vider le panier
 
 buttonDeleteCart.addEventListener('click', function(){
     localStorage.clear();
@@ -117,16 +117,16 @@ submitBtn.addEventListener('click', submitVerificatons)
 // Suite au clic, fonction de vérification via regex
 
 function submitVerificatons() {
-    inputFirstNameVerif()
-    console.log(inputFirstNameVerif())
-    inputLastNameVerif()
-    console.log(inputLastNameVerif())
+    inputFirstNameLastNameCityVerif(firstNameInput)
+    console.log(inputFirstNameLastNameCityVerif(firstNameInput))
+    inputFirstNameLastNameCityVerif(lastNameInput)
+    console.log(inputFirstNameLastNameCityVerif(lastNameInput))
     inputEmailVerif()
     console.log(inputEmailVerif())
     inputAdressVerif()
     console.log(inputAdressVerif())
-    inputCityVerif()
-    console.log(inputCityVerif())
+    inputFirstNameLastNameCityVerif(cityInput)
+    console.log(inputFirstNameLastNameCityVerif(cityInput))
 
     // Création de l'objet contact à envoyer
 
@@ -150,7 +150,7 @@ function submitVerificatons() {
             console.log(stringifySentInformations)
 
             async function sendPostInformations() {
-                const response = await fetch("https://apiorinico.herokuapp.com/api/cameras/order", {
+                let response = await fetch("https://apiorinico.herokuapp.com/api/cameras/order", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -172,6 +172,14 @@ function submitVerificatons() {
                 }
             }
 
+            sendPostInformations()                
+                .catch(
+                    (err => {
+                        console.log('Il y a eu un problème avec l\'opération fetch: ' + err.message);
+                        alert('Un problème est survenu avec le serveur, veuillez réactualiser la page.')
+                    }
+                ));
+
             sendPostInformations();
 
         // En revanche, si les informations saisies ne sont pas validées par les regex, on alerte l'utilisateur du problème
@@ -185,65 +193,34 @@ function submitVerificatons() {
 
 // Regex Nom, Prénom et Ville permettant les accents, les apostrophes, les tirets ainsi que les lettres étrangères.
 
-function inputFirstNameVerif(inputFirstName) {
-    let regex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
-    let ctrl = document.getElementById("inputFirstName")
-    if (regex.test(ctrl.value) === true) {
-        return true
-    } else {
-        return false
-    }
-}
+function inputFirstNameLastNameCityVerif(input) {
+    let regex = /^[a-zA-ZàáâäèéêëïùûÀÁÂÄÈÉÊËÏÙÛ ,.'-]{2,}$/;
+    let ctrl = input
 
-function inputLastNameVerif(lastNameInput) {
-    let regex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
-    let ctrl = document.getElementById("inputLastName")
-    if (regex.test(ctrl.value) === true) {
-        return true
-    } else {
-        return false
-    }
-}
-
-function inputCityVerif(cityInput) {
-    let regex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
-    let ctrl = document.getElementById("inputCity")
-    if (regex.test(ctrl.value) === true) {
-        return true
-    } else {
-        return false
-    }   
+    return (regex.test(ctrl.value))
 }
 
 // Regex email conforme à la norme RFC 5322
 
-function inputEmailVerif(emailInput) {
+function inputEmailVerif() {
     let regex = /(?:[a-z0-9!#$%&'*+\=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
-    let ctrl = document.getElementById("inputEmail")
-    if (regex.test(ctrl.value) === true) {
-        return true
-    } else {
-        return false
-    }
-}
+    let ctrl = emailInput
 
+    return (regex.test(ctrl.value))
+}
 // Regex adresse, assez permissif mais obligeant 2 espaces.
 
-function inputAdressVerif(adressInput) {
-    let regex = /\w+(\s\w+){2,}/;
-    let ctrl = document.getElementById("inputAddress")
-    if (regex.test(ctrl.value) === true) {
-        return true
-    } else {
-        return false
-    }
+function inputAdressVerif() {
+    let regex = /^[a-zA-Z0-9àáâäèéêëïùûÀÁÂÄÈÉÊËÏÙÛ ,.'-]{5,}$/u;
+    let ctrl = adressInput
+
+    return (regex.test(ctrl.value))
 }
 
-// Fetch afin de récupérer les informations de l'API, puis de verifier le panier, puis de calculer et afficher le prix total
+// Fonctions afin de verifier le panier, puis de calculer et afficher le prix total
 
-fetch("https://apiorinico.herokuapp.com/api/cameras")
-    .then(res => res.json)
-    .then(doesFormAndTableAndDeleteButtonAppear())
-    .then(checkEmptyCart())
-    .then(calculateTotalPrice())
-    .then(displayTotalPrice())
+doesFormAndTableAndDeleteButtonAppear();
+checkEmptyCart();
+calculateTotalPrice();
+displayTotalPrice();
+
