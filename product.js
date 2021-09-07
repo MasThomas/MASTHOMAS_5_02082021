@@ -17,6 +17,10 @@ fetch("https://apiorinico.herokuapp.com/api/cameras/" + urlId)
             document.getElementById("lenses_choice").innerHTML += `<option value="${lenses}">${lenses}</option>`;
         };
     })
+    .catch(function(error) {
+        console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
+        alert("Erreur de connexion avec le serveur. Si le problème persiste, veuillez retourner à la page d'accueil")
+      });
 
 // Création de l'élément HTML à injecter suite à l'appel API 
 
