@@ -101,7 +101,6 @@ let cityInput = document.getElementById("inputCity")
 let products = []
 
 function getCartIds() {
-    
     for(let i = 0; i < cart.length; ++i) {
         let j = Object.values(cart[i])        
         products.push(j[0]);
@@ -118,15 +117,15 @@ submitBtn.addEventListener('click', submitVerificatons)
 
 function submitVerificatons() {
     inputFirstNameLastNameCityVerif(firstNameInput)
-    console.log(inputFirstNameLastNameCityVerif(firstNameInput))
+    // console.log(inputFirstNameLastNameCityVerif(firstNameInput))
     inputFirstNameLastNameCityVerif(lastNameInput)
-    console.log(inputFirstNameLastNameCityVerif(lastNameInput))
+    // console.log(inputFirstNameLastNameCityVerif(lastNameInput))
     inputEmailVerif()
-    console.log(inputEmailVerif())
+    // console.log(inputEmailVerif())
     inputAdressVerif()
-    console.log(inputAdressVerif())
+    // console.log(inputAdressVerif())
     inputFirstNameLastNameCityVerif(cityInput)
-    console.log(inputFirstNameLastNameCityVerif(cityInput))
+    // console.log(inputFirstNameLastNameCityVerif(cityInput))
 
     // Création de l'objet contact à envoyer
 
@@ -140,7 +139,7 @@ function submitVerificatons() {
 
     // Si toutes les vérifications retournent "true" (les regex sont validées), alors :
 
-    if (inputFirstNameVerif() === true && inputLastNameVerif() === true && inputEmailVerif() === true && inputAdressVerif() === true && inputCityVerif() === true) {
+    if (inputFirstNameLastNameCityVerif(firstNameInput) === true && inputFirstNameLastNameCityVerif(lastNameInput) === true && inputEmailVerif() === true && inputAdressVerif() === true && inputFirstNameLastNameCityVerif(cityInput) === true) {
             
         // On récupère les Id du panier
             getCartIds()
