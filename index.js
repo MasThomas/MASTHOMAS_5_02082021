@@ -14,9 +14,9 @@ fetch("https://apiorinico.herokuapp.com/api/cameras") // http://localhost:3000/a
       });
       
       
-// Const pour afficher les produits dans l'HTML
+// Fonction pour afficher les produits dans l'HTML
 
-const addProduct = item => {
+function addProduct (item) {
     container = document.getElementById("container")
     .innerHTML +=   `<div class="mx-auto my-4"> 
                         <div class="card h-100">
