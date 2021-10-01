@@ -17,8 +17,8 @@ function checkEmptyCart() {
             </div>
             <div class="d-flex justify-content-center my-5">
             <a href="./index.html" class="btn btn-primary"><i class="fa fa-angle-left"></i> Retourner à la liste des articles</a>
-            </div>
-            `
+            </div>`
+
     } else {
 
 // Sinon, on créé une boucle sur le panier dans le localStorage pour afficher chaque élément de celui-ci
@@ -44,7 +44,7 @@ function checkEmptyCart() {
                 </tbody>`
         }
     }
-}
+};
 
 
 // Si le panier est vide, supression du formulaire, du bouton pour vider le panier ainsi que du footer du tableau du panier
@@ -61,7 +61,7 @@ function doesFormAndTableAndDeleteButtonAppear() {
     }
 }
 
-// Création d'un Eventlistener sur le bouton pour pouvoir vider le panier
+// Création d'un Eventlistener sur le bouton pour pouvoir vider le panier, puis recharger la page pour afficher le panier vide
 
 buttonDeleteCart.addEventListener('click', function(){
     localStorage.clear();
@@ -116,16 +116,12 @@ submitBtn.addEventListener('click', submitVerificatons)
 // Suite au clic, fonction de vérification via regex
 
 function submitVerificatons() {
+
     inputFirstNameLastNameCityVerif(firstNameInput)
-    // console.log(inputFirstNameLastNameCityVerif(firstNameInput))
     inputFirstNameLastNameCityVerif(lastNameInput)
-    // console.log(inputFirstNameLastNameCityVerif(lastNameInput))
     inputEmailVerif()
-    // console.log(inputEmailVerif())
     inputAdressVerif()
-    // console.log(inputAdressVerif())
     inputFirstNameLastNameCityVerif(cityInput)
-    // console.log(inputFirstNameLastNameCityVerif(cityInput))
 
     // Création de l'objet contact à envoyer
 
@@ -137,7 +133,7 @@ function submitVerificatons() {
         email: emailInput.value
     }
 
-    // Si toutes les vérifications retournent "true" (les regex sont validées), alors :
+    // Si toutes les vérifications retournent "true" (les regex sont toutes validées), alors :
 
     if (inputFirstNameLastNameCityVerif(firstNameInput) === true && inputFirstNameLastNameCityVerif(lastNameInput) === true && inputEmailVerif() === true && inputAdressVerif() === true && inputFirstNameLastNameCityVerif(cityInput) === true) {
             
@@ -149,7 +145,7 @@ function submitVerificatons() {
             console.log(stringifySentInformations)
 
             async function sendPostInformations() {
-                let response = await fetch("https://apiorinico.herokuapp.com/api/cameras/order", {
+                let response = await fetch("http://localhost:3000/api/cameras/order", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -161,8 +157,8 @@ function submitVerificatons() {
                 console.log(response.status);
                 console.log(response.statusText);
                 
-                // Si le serveur répond favorablement à la requète, on stocke l'ID de commande dans le localStorage ainsi que le coût total
-                // de la commande. Puis on redirige vers la page de confirmation de commande
+                // Si le serveur répond favorablement à la requète (code 200 ou 201), on stocke l'ID de commande dans le localStorage 
+                // ainsi que le coût total de la commande. Puis on redirige vers la page de confirmation de commande.
 
                 if (response.status === 200 || response.status === 201) {
                     localStorage.setItem("orderId",JSON.stringify(body.orderId))
