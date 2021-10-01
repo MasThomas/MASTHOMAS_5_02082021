@@ -2,15 +2,15 @@
 
 const params = new URLSearchParams(document.location.search);
 const urlId = params.get("id");
-// console.log(urlId); // Ok le bon ID est récupéré
+
 
 // Nouveau fetch pour récupérer les données et afficher le produit selectionné
 
-fetch("https://apiorinico.herokuapp.com/api/cameras/" + urlId)
+fetch("http://localhost:3000/api/cameras/" + urlId)
     .then(res => res.json())
-    .then(function(displayProduct) {
+    .then(function displayOneProduct(displayProduct) {
         let item = new Product(displayProduct)
-        showProduct(item);
+        ProductInformations(item);
 
 // Récupération de la liste des lentilles et affichage dans un menu déroulant (<select>)
     for (let lenses of item.lenses) {
@@ -24,7 +24,7 @@ fetch("https://apiorinico.herokuapp.com/api/cameras/" + urlId)
 
 // Création de l'élément HTML à injecter suite à l'appel API 
 
-const showProduct = (item) => {
+function ProductInformations(item) {
     document.getElementById("container-product").innerHTML =
         `<div class="d-flex justify-content-center my-5" style="height: 300px">
         <div class="card d-flex flex-row mx-auto w-75">
