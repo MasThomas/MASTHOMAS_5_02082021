@@ -81,10 +81,10 @@ function calculateTotalPrice(){
 }
 
 let totalPriceContainer = document.getElementById("totalPrice")
+
 function displayTotalPrice() {
     totalPriceContainer.innerHTML += `${totalPrice} €`;
 }
-
 
 // Ciblage des input afin de valider le formulaire
 
