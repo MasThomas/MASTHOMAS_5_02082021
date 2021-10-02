@@ -1,8 +1,8 @@
 // REQUETE API
 
-fetch("https://apiorinico.herokuapp.com/api/cameras") // http://localhost:3000/api/cameras || https://apiorinico.herokuapp.com/api/cameras
+fetch("http://localhost:3000/api/cameras") // http://localhost:3000/api/cameras || https://apiorinico.herokuapp.com/api/cameras
     .then(res => res.json())
-    .then(function (ProductsList) {
+    .then(function displayProductList (ProductsList) {
         for (let product of ProductsList) {
             let item = new Product(product)
             addProduct(item);  
