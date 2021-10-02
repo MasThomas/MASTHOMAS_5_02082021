@@ -8,11 +8,11 @@ const urlId = params.get("id");
 
 fetch("http://localhost:3000/api/cameras/" + urlId)
     .then(res => res.json())
-    .then(function displayOneProduct(displayProduct) {
-        let item = new Product(displayProduct)
-        ProductInformations(item);
+    .then(function displayOneProduct(product) {
+        let item = new Product(product)
+        displayProductDetails(item);
 
-// Récupération de la liste des lentilles et affichage dans un menu déroulant (<select>)
+// Récupération de la liste des objectifs et affichage dans un menu déroulant (<select>)
     for (let lenses of item.lenses) {
             document.getElementById("lenses_choice").innerHTML += `<option value="${lenses}">${lenses}</option>`;
         };
@@ -24,7 +24,7 @@ fetch("http://localhost:3000/api/cameras/" + urlId)
 
 // Création de l'élément HTML à injecter suite à l'appel API 
 
-function ProductInformations(item) {
+function displayProductDetails(item) {
     document.getElementById("container-product").innerHTML =
         `<div class="d-flex justify-content-center my-5" style="height: 300px">
         <div class="card d-flex flex-row mx-auto w-75">
@@ -71,23 +71,24 @@ function ProductInformations(item) {
             input.value = 1
         }
         getVal = input.value
-        console.log(getVal)
+        // console.log(getVal)
         return getVal;
     }
     
 // Selection du select Lenses et ajout d'un EventListener (change)
 
     let lensesInput = document.getElementById('lenses_choice')
+    
     lensesInput.addEventListener('change', lensesChoice)
 
-// Initialisation de getLenses en cas de non-modification puis récupération du choix de lentilles 
+// Initialisation de getLenses en cas de non-modification puis récupération du choix d'objectif 
 
     let getLenses = lensesInput.value;
 
     function lensesChoice(event) {
         var input = event.target
         getLenses = input.value
-        console.log(getLenses)
+        // console.log(getLenses)
         return getLenses;
     }
 
@@ -126,7 +127,7 @@ function ProductInformations(item) {
             cart.push(product); 
             localStorage.setItem("cartStorage", JSON.stringify(cart));
             alert(`Vous avez ajouté ${product.quantity} "${product.name}" avec l'objectif "${product.lenses}" à votre panier`);
-            console.log(localStorage)
+            // console.log(localStorage)
             location.reload();
         }    
         
@@ -143,7 +144,7 @@ function ProductInformations(item) {
                 if (testProduct) cart.push(product);
                     localStorage.setItem("cartStorage", JSON.stringify(cart));
                     alert(`Vous avez ajouté ${product.quantity} "${product.name}" avec l'objectif "${product.lenses}" à votre panier`);
-                    console.log(localStorage);
+                    // console.log(localStorage);
                     location.reload();
         }
     });
